@@ -1,6 +1,7 @@
-(ns pg-types.core)
+(ns pg-types.core
+  (:require 
+    [pg-types.read-column]
+    [pg-types.sql-parameter]
+    ))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+

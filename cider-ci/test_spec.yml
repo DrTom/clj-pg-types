@@ -1,0 +1,14 @@
+name: CLJ PG-Types Tests
+
+task_defaults:
+  traits: 
+    lein: true
+
+tasks:
+
+  - name: pg-types.core-test
+    scripts:
+      main: 
+        body: lein midje 
+
+
