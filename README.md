@@ -16,7 +16,7 @@ the type of the providing respectively receiving entity.
 
 ## Release and Dependecy Information 
 
-*  `pg-types "1.0.0-beta.6"`
+*  `pg-types "1.0.0"`
 
 ## Usage
 

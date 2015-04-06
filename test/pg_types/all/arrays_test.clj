@@ -31,10 +31,11 @@
 
 (fact "array of timestamp converted" 
       (jdbc/with-db-transaction [tx db-spec]
-        (jdbc/db-do-commands tx "CREATE TEMP TABLE test (tarray timestamp[])")
+        (jdbc/db-do-commands tx "SET LOCAL TIME ZONE 'UTC'")
+        (jdbc/db-do-commands tx "CREATE TEMP TABLE test (tarray timestamp WITHOUT TIME ZONE[])")
         (let [now (time-core/now)
               now-iso8601-str (str now) ]
-          (logging/warn now-iso8601-str)
+          ;(logging/warn now-iso8601-str)
           (facts "result of inserting " 
                  (let [result (first (jdbc/insert! tx :test {:tarray [now-iso8601-str]}))]
                    (fact "equal to input" (:tarray result) => [now])

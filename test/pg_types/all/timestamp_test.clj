@@ -5,13 +5,15 @@
     [pg-types.all :refer :all]
     [clojure.java.jdbc :as jdbc]
     [clj-time.core :as time-core]
+    [clj-time.local]
     ))
 
 (def db-spec (env-db-spec))
 
 (facts "write and read timestamps"
        (jdbc/with-db-transaction [tx db-spec]
-         (jdbc/db-do-commands tx "CREATE TEMP TABLE test (id text, at timestamp)")
+         (jdbc/db-do-commands tx "SET LOCAL TIME ZONE 'UTC'")
+         (jdbc/db-do-commands tx "CREATE TEMP TABLE test (id text, at timestamp WITHOUT TIME ZONE)")
          (let [now (time-core/now)]
            (facts "result of a to string coerced / iso8601 compatible inserted value"
                   (let [now-str (str now) 
@@ -24,4 +26,5 @@
                     (fact "is equal to the original object" at => now)))
            )))
 
-(str (time-core/now))
+;(str (time-core/now))
+;(str (clj-time.local/local-now))

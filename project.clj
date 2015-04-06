@@ -1,9 +1,8 @@
-(defproject pg-types "1.0.0-beta.6"
+(defproject pg-types "1.0.0"
   :description "Postgresql Types with Clojure JDBC"
   :url "https://github.com/DrTom/clj-pg-types"
   :license {:name "Dual: EPL and LGPL"}
   :dependencies [
-                 [clj-logging-config "1.9.12"]
                  [clj-time "0.9.0"]
                  [org.clojure/clojure "1.6.0"]
                  [org.clojure/data.json "0.2.5"]
@@ -22,9 +21,4 @@
                    :resource-paths ["resources_dev"]
 
                    }}
-
-  :plugins [[org.apache.maven.wagon/wagon-ssh-external "2.6"]]
-
-  :deploy-repositories [ ["tmp" "scp://maven@schank.ch/tmp/maven-repo/"]]
-
   )
