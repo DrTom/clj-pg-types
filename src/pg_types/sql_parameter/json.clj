@@ -3,14 +3,16 @@
     [pg-types.sql-parameter :refer :all]
     [clojure.data.json :as json]
     )
-  (:import 
+  (:import
     [org.postgresql.util PGobject]
     ))
 
 (defn create-pg-object [type-name-kw value]
   (doto (PGobject.)
-    (.setType (name type-name-kw))
-    (.setValue (json/write-str value))))
+    (.setType (if (keyword? type-name-kw)
+                (subs (str type-name-kw) 1)
+                (str type-name-kw)))
+    (.setValue (json/write-str value :key-fn #(subs (str %) 1)))))
 
 (defmethod convert-parameter [:json clojure.lang.IPersistentMap]
   [type-name-kw value _ _]
