@@ -1,5 +1,5 @@
 (ns pg-types.read-column
-  (:require
+  (:require 
     [clojure.java.jdbc :as jdbc]
     [clojure.tools.logging :as logging]
     [pg-types.misc :as misc]
@@ -17,16 +17,15 @@
   value)
 
 (defn dispatch-to-convert-column [val rsmeta idx]
-  ;(logging/debug 'dispatch-to-convert-column [val rsmeta idx])
   (let [type-name-kw (-> (.getColumnTypeName rsmeta idx)
                          misc/dispatch-type-name-kw)
-        ;_ (logging/debug "calling convert-column with: " [type-name-kw val])
+        _ (logging/debug "calling convert-column with: " [type-name-kw val])
         converted (convert-column type-name-kw val rsmeta idx)]
-    ;(logging/debug "converted-column: " converted)
+    (logging/debug "converted-column: " converted)
     converted))
 
 (extend-protocol jdbc/IResultSetReadColumn
-  Object
+  Object 
   (result-set-read-column [val rsmeta idx]
     (dispatch-to-convert-column val rsmeta idx)))
 

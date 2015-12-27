@@ -7,13 +7,12 @@
     [org.postgresql.util PGobject]
     ))
 
-(defn json-key-fn [k]
-  (if (keyword? k) (subs (str k) 1) (str k) ))
-
 (defn create-pg-object [type-name-kw value]
   (doto (PGobject.)
-    (.setType (json-key-fn type-name-kw))
-    (.setValue (json/write-str value :key-fn json-key-fn))))
+    (.setType (if (keyword? type-name-kw)
+                (subs (str type-name-kw) 1)
+                (str type-name-kw)))
+    (.setValue (json/write-str value :key-fn #(subs (str %) 1)))))
 
 (defmethod convert-parameter [:json clojure.lang.IPersistentMap]
   [type-name-kw value _ _]

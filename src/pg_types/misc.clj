@@ -1,13 +1,8 @@
-(ns pg-types.misc
-  (:require
-    [clojure.tools.logging :as logging]
-    ))
+(ns pg-types.misc)
 
 
 (defn dispatch-type-name-kw [type-name]
-  ;(logging/debug 'dispatch-type-name-kw type-name)
-  (if (or (= "_" (-> type-name name (subs 0 1)))
-          (= "][" (-> type-name name reverse (clojure.string/join) (subs 0 2))))
+  (if (= "_" (-> type-name name (subs 0 1)))
     :_
     (keyword type-name)))
 
