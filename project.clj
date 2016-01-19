@@ -1,4 +1,4 @@
-(defproject pg-types "2.1.1"
+(defproject pg-types "2.1.2"
   :description "Postgresql Types with Clojure JDBC"
   :url "https://github.com/DrTom/clj-pg-types"
   :license {:name "Dual: EPL and LGPL"}
