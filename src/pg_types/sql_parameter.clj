@@ -1,17 +1,18 @@
 (ns pg-types.sql-parameter
-  (:require 
+  (:require
     [clojure.java.jdbc :as jdbc]
-    [clojure.tools.logging :as logging]
     [pg-types.misc :as misc]
+
+    [clojure.tools.logging :as logging]
     )
-  (:import 
+  (:import
     [java.sql PreparedStatement ParameterMetaData]
     [org.postgresql.util PGobject]
     ))
 
 ;(ns-unmap *ns* 'convert-parameter)
 
-(defn- dispatch-convert-parameter [type-name-kw value _ _] 
+(defn- dispatch-convert-parameter [type-name-kw value _ _]
   [type-name-kw (type value)])
 
 (defmulti convert-parameter dispatch-convert-parameter)
@@ -30,5 +31,6 @@
 (extend-protocol jdbc/ISQLParameter
   java.lang.Object
   (set-parameter [val ^PreparedStatement stmt ^long ix]
-    (.setObject stmt ix 
+    (.setObject stmt ix
                 (dispatch-to-convert-parameter val stmt ix))))
+

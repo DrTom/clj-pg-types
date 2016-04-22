@@ -1,4 +1,4 @@
-(defproject pg-types "2.1.2"
+(defproject pg-types "2.2.0"
   :description "Postgresql Types with Clojure JDBC"
   :url "https://github.com/DrTom/clj-pg-types"
   :license {:name "Dual: EPL and LGPL"}
@@ -12,6 +12,7 @@
                  ]
 
   :profiles {:dev {:dependencies [
+                                  [logbug "4.0.0"]
                                   [midje "1.7.0"]
                                   [org.slf4j/slf4j-api "1.7.12"]
                                   [org.slf4j/slf4j-log4j12 "1.7.12"]

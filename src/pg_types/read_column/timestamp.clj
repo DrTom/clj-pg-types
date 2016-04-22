@@ -5,5 +5,9 @@
     ))
 
 (defmethod convert-column [:timestamp java.sql.Timestamp]
-  [_ val _ _] 
+  [_ val _ _]
+  (time-coerce/from-sql-time val))
+
+(defmethod convert-column [:timestamptz java.sql.Timestamp]
+  [_ val _ _]
   (time-coerce/from-sql-time val))
