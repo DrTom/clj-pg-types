@@ -1,6 +1,6 @@
 (ns pg-types.scratch
 
-  (:require 
+  (:require
     [clojure.java.jdbc :as jdbc]
     [pg-types.connection :refer :all]
     )

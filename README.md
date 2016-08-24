@@ -7,16 +7,16 @@ structures and those used in Clojure on top of [clojure.java.jdbc][].
 
 This library is focused on Postgresql type conversion. It provides automatic
 conversion in the simple case. This library is unobtrusive. It does not force
-*all or nothing* approach. The design is such that the various conversion can
+an *all or nothing* approach. The design is such that the various conversion can
 be enabled at a fine granularity. This library provides a low level API to the
 end of defining custom type conversions selectively on the Postgresql type and
 the type of the providing respectively receiving entity.
 
 
 
-## Release and Dependecy Information
+## Release and Dependency Information
 
-*  `pg-types "2.1.1"`
+*  `pg-types "2.3.0"`
 
 ## Supported Drivers
 
@@ -93,6 +93,16 @@ Conversely requiring `pg-types/read-column/timestamp` will enable the
 conversion from Postgresql `timestamp` to `DateTime`. Other export
 conversions are defined in their corresponding namespace under
 [`pg-types.read-column`][].
+
+
+#### Implementing Conversions for Custom Enumerated Types
+
+Custom types such as "Enumerated Types"
+<https://www.postgresql.org/docs/9.1/static/datatype-enum.html> require
+custom conversions.
+
+See [`./test/pg_types/enum_test.clj`](./test/pg_types/enum_test.clj)
+for an annotated example.
 
 
 ### Advanced Usage and Internals
