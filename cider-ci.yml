@@ -1,0 +1,21 @@
+jobs:
+  tests:
+    name: Tests
+    run_when:
+      any branch has been updated:
+        type: branch
+        include_match: ^.*$
+    context:
+      task_defaults:
+        traits:
+          'Leiningen 2': true
+      tasks:
+        - name: run tests
+          scripts:
+            env:
+              body: |
+                set -euxo
+                env | sort
+            test:
+              body:
+                lein midje

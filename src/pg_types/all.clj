@@ -1,5 +1,5 @@
 (ns pg-types.all
-  (:require 
+  (:require
     [pg-types.read-column.array]
     [pg-types.read-column.json]
     [pg-types.read-column.timestamp]

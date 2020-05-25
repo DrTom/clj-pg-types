@@ -13,20 +13,20 @@ end of defining custom type conversions selectively on the Postgresql type and
 the type of the providing respectively receiving entity.
 
 
-
 ## Release and Dependency Information
 
-*  `pg-types "2.3.0"`
+*  `pg-types "2.4.0"`
 
-## Supported Drivers
 
-This library defines a supported and tested postgresql JDBC driver as
-a dependency. We recommend not to explicitly depend on a driver since it is
-possible to end up with an incompatible one.
+## Java, Clojure, and  Postgresql Drivers Dependencies
 
-This library is for the JDBC41 series of the driver which is recommended for
-Java 1.7 (and hence Clojure 1.7). It will not work for the JDBC42 services of
-the driver. It can be used on Java 1.8 with JDBC41 driver.
+This version has been tested against Java 11 and Java 8. It is tested against
+Clojure version `1.10` but older versions should work too. The tested
+Postgresql driver version is `42.2.12`.
+
+Timestamps are converted to/from the Joda-Time library. The
+`java.sql.TimeStamp` and related classes provided in `java.time` are not
+supported yet.
 
 
 ## Usage
@@ -144,7 +144,7 @@ exception is if a library also (re-) implements `ISQLParameter` or
 
 It is far more likely that other code implements either of the two protocols
 with specific types which will disable the provided multimethods accidentally
-or by purpose. We mentioned the restrictions of protocoles and requirements to
+or by purpose. We mentioned the restrictions of protocols and requirements to
 dispatch on multiple properties for implementing `ISQLParameter`. It stands
 therefore to reason not to provide any implementation for `ISQLParameter` but
 define methods for the multimethod `convert-parameter`.
@@ -159,13 +159,13 @@ as `:_text` but simply as `:_`. All array types are therefore captured e.g.
 with
 
 ```clojure
-(defmethod convert-column [:_ Jdbc4Array]
+(defmethod convert-column [:_ Array]
   [_ array rsmeta idx]
   ;...
 ```
 
 
-##### Converting values within Arrays too
+##### Converting values within Arrays
 
 The values within an array will not be subject to whatever is
 implemented either for `IResultSetReadColumn` or `convert-column`. This
@@ -183,10 +183,10 @@ consumer in this case and therefore `nil` is set for both.
 
 ## License
 
-Copyright © 2015 Thomas Schank
+Copyright © 2020 Thomas Schank
 
 
- Postgresql Types for Clojure JDBC  may be used under the terms of either the
+ Postgresql Types for Clojure JDBC may be used under the terms of either the
 
  * GNU Lesser General Public License (LGPL) v3
    https://www.gnu.org/licenses/lgpl

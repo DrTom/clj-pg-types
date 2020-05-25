@@ -3,11 +3,11 @@
     [pg-types.read-column :refer :all]
     )
   (:import 
-    [org.postgresql.jdbc4 Jdbc4Array]
+    [java.sql Array]
     ))
 
 
-(defmethod convert-column [:_ Jdbc4Array]
+(defmethod convert-column [:_ Array]
   [_ array rsmeta idx]
   (let [scalar-type-name-kw (-> (.getColumnTypeName rsmeta idx)
                                 (subs 1)

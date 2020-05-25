@@ -32,7 +32,7 @@
 (fact "array of timestamp converted" 
       (jdbc/with-db-transaction [tx db-spec]
         (jdbc/db-do-commands tx "SET LOCAL TIME ZONE 'UTC'")
-        (jdbc/db-do-commands tx "CREATE TEMP TABLE test (tarray timestamp WITHOUT TIME ZONE[])")
+        (jdbc/db-do-commands tx "CREATE TEMP TABLE test (tarray timestamp WITH TIME ZONE[])")
         (let [now (time-core/now)
               now-iso8601-str (str now) ]
           ;(logging/warn now-iso8601-str)
