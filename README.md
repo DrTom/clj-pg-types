@@ -24,9 +24,38 @@ This version has been tested against Java 11 and Java 8. It is tested against
 Clojure version `1.10` but older versions should work too. The tested
 Postgresql driver version is `42.2.12`.
 
-Timestamps are converted to/from the Joda-Time library. The
-`java.sql.TimeStamp` and related classes provided in `java.time` are not
-supported yet.
+
+## Timestamps and `clj-time` vs `clojure.java-time`
+
+Timestamps are converted to/from the Joda-Time library via the now deprecated
+[clj-time](https://github.com/clj-time/clj-time). The next major release will
+remove this behavior.
+
+If you don't want Joda-Time types with the `2.x` release simply do not require
+`pg-types.all` but only those conversions you desire. The following loads all
+available conversions **excluding** Joda-Time.
+
+```clojure
+(ns your-ns
+  (:require
+    [pg-types.read-column.array]
+    [pg-types.read-column.json]
+    [pg-types.read-column]
+    [pg-types.sql-parameter.array]
+    [pg-types.sql-parameter.json]
+    [pg-types.sql-parameter.uuid]
+    [pg-types.sql-parameter]))
+```
+
+The type of a timestamp will then be `java.sql.Timestamp` which can be
+converted to to more accessible types for example via
+[Clojure.Java-Time](https://github.com/dm3/clojure.java-time):
+
+
+```clojure
+(java-time/local-date my-timestamp)
+(java-time/local-time my-timestamp)
+```
 
 
 ## Usage
