@@ -1,10 +1,10 @@
 (ns pg-types.timestamp-test
   (:require
-    [clojure.test :refer :all]
-    [pg-types.connection :refer :all]
     [pg-types.all :refer :all]
-    [clojure.java.jdbc :as jdbc]
+    [pg-types.connection :refer :all]
     [clj-time.local]
+    [clojure.java.jdbc :as jdbc]
+    [clojure.test :refer :all]
     [java-time])
   (:import [java.sql Timestamp]))
 
