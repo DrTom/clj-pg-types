@@ -1,6 +1,6 @@
-(ns pg-types.all.uuid-test
-  (:require 
-    [midje.sweet :refer :all] 
+(ns pg-types.uuid-test
+  (:require
+    [midje.sweet :refer :all]
     [pg-types.connection :refer :all]
     [pg-types.all :refer :all]
     [clojure.java.jdbc :as jdbc]
@@ -8,9 +8,9 @@
     ))
 
 (def db-spec (env-db-spec))
-      
 
-(facts "uuid" 
+
+(facts "uuid"
        (jdbc/with-db-transaction [tx db-spec]
          (jdbc/db-do-commands tx "CREATE TEMP TABLE test (id uuid)")
          (let [str-uuid "65b85773-c935-439f-a3c0-6c538f84825d"
@@ -20,10 +20,10 @@
                   (let [result-value (:id (first (jdbc/insert! tx :test {:id str-uuid})))]
                     (fact "is the equivalent uuid type" result-value => uuid)))
 
-           (facts "result of querying with a string value" 
+           (facts "result of querying with a string value"
                   (let [res (first  (jdbc/query tx ["SELECT * FROM test WHERE id = ?" str-uuid]))]
                     (fact "yields the equivalent uuid type" res => {:id uuid})))
-           (facts "result of querying with a uuid value" 
+           (facts "result of querying with a uuid value"
                   (let [res (first  (jdbc/query tx ["SELECT * FROM test WHERE id = ?" uuid]))]
                     (fact "yields the equivalent uuid type" res => {:id uuid})))
            )

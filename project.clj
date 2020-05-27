@@ -18,8 +18,7 @@
                                   [org.slf4j/slf4j-api "1.7.30"]
                                   [org.slf4j/slf4j-log4j12 "1.7.30"]
                                   ]
+                   :source-paths ["src" "src_dev"]
                    :plugins [[lein-midje "3.1.1"]]
-
                    :resource-paths ["resources_dev"]
-
                    }})

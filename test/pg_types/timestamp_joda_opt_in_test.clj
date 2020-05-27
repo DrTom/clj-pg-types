@@ -1,12 +1,16 @@
-(ns pg-types.all.timestamp-test
+(ns pg-types.timestamp-joda-opt-in-test
   (:require
     [midje.sweet :refer :all]
     [pg-types.connection :refer :all]
     [pg-types.all :refer :all]
+    [pg-types.all.read_column.timestap.clj-time]
     [clojure.java.jdbc :as jdbc]
     [clj-time.core :as time-core]
     [clj-time.local]
-    ))
+    )
+  (:import
+    [System]
+    [java.sql.Date]))
 
 (def db-spec (env-db-spec))
 
@@ -35,6 +39,7 @@
                   (facts "result of a DateTime inserted value into timestamp WITH TIME ZONE"
                          (let [at (:at_wtz (first (jdbc/insert! tx :test {:id "date-time-wtz" :at_wtz now})))]
                            (fact "is of type DateTime" (type at) => org.joda.time.DateTime)
+                           Not that
                            (fact "is equal to the original object" at => now)))
                   ))))
 

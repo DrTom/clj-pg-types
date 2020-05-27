@@ -1,4 +1,4 @@
-(ns pg-types.read-column.timestamp
+(ns pg-types.read-column.timestamp.clj-time
   (:require
     [pg-types.read-column :refer :all]
     [clj-time.coerce :as time-coerce]

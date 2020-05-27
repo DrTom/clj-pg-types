@@ -2,7 +2,6 @@
   (:require
     [pg-types.read-column.array]
     [pg-types.read-column.json]
-    [pg-types.read-column.timestamp]
     [pg-types.read-column]
     [pg-types.sql-parameter.array]
     [pg-types.sql-parameter.json]
