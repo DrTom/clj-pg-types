@@ -16,34 +16,35 @@
 
 (def db-spec (env-db-spec))
 
+(defn create-test-table [tx]
+  (jdbc/db-do-commands
+    tx "CREATE TEMP TABLE test (at timestamp WITH TIME ZONE )"))
 
-(deftest foo
-  (is (= 1 1)))
-
-(deftest write-and-read-timestamps
-  (jdbc/with-db-transaction [tx db-spec]
-    (jdbc/db-do-commands tx "SET LOCAL TIME ZONE 'UTC'")
-    (jdbc/db-do-commands tx "CREATE TEMP TABLE test (at timestamp WITH TIME ZONE )")
-    (let [instant (java-time/instant)
-          timestamp (Timestamp/from instant)]
-      (jdbc/insert! tx :test {:at timestamp})
-      (let [at (->> "select * from test"
-                    (jdbc/query tx) first :at)]
-        (is (= java.sql.Timestamp (type at)))
-        (is (= timestamp at))))))
+(defn first-at-in-test [tx]
+  (->> "select * from test"
+       (jdbc/query tx) first :at))
 
 
-(deftest write-iso8601
-  (testing "we can write iso8601 and retrieve java.sql.timestap
+(deftest writing-and-reading-timestamps
+
+  (testing "writing rand reading a timestamp yields equivalent values "
+    (jdbc/with-db-transaction [tx db-spec]
+      (create-test-table tx)
+      (let [instant (java-time/instant)
+            timestamp (Timestamp/from instant)]
+        (jdbc/insert! tx :test {:at timestamp})
+        (let [at (first-at-in-test tx)]
+          (is (= java.sql.Timestamp (type at)))
+          (is (= timestamp at))))))
+
+  (testing "we can write iso8601 and retrieve java.sql.timestamp
            WITH RESTRICTED PRECICION to milliseconds"
     (jdbc/with-db-transaction [tx db-spec]
-      (jdbc/db-do-commands tx "SET LOCAL TIME ZONE 'UTC'")
       (jdbc/db-do-commands tx "CREATE TEMP TABLE test (at timestamp WITH TIME ZONE )")
       (let [instant (java-time/truncate-to (java-time/instant) :millis)
             iso8601 (str instant)
             timestamp (Timestamp/from instant)]
         (jdbc/insert! tx :test {:at iso8601})
-        (let [at (->> "select * from test"
-                      (jdbc/query tx) first :at)]
+        (let [at (first-at-in-test tx)]
           (is (= java.sql.Timestamp (type at)))
           (is (= timestamp at)))))))
