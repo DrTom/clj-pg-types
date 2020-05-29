@@ -29,7 +29,7 @@
   [_ value _ _]
   (java-time/instant->sql-timestamp value))
 
-(defmethod convert-parameter [:timestampz java.time.Instant]
+(defmethod convert-parameter [:timestamptz java.time.Instant]
   [_ value _ _]
   (java-time/instant->sql-timestamp value))
 
