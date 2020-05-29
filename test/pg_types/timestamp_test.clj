@@ -1,6 +1,6 @@
 (ns pg-types.timestamp-test
   (:require
-    [pg-types.all :refer :all]
+    [pg-types.all]
     [pg-types.connection :refer :all]
     [clj-time.local]
     [clojure.java.jdbc :as jdbc]
@@ -19,12 +19,23 @@
 
 (deftest writing-and-reading-timestamps
 
-  (testing "writing rand reading a timestamp yields equivalent values "
+  (testing "writing rand reading a sql-timestamp yields equivalent values "
     (jdbc/with-db-transaction [tx (env-db-spec)]
       (create-test-table tx)
       (let [timestamp (-> (java-time/instant)
                           java-time/instant->sql-timestamp)]
         (jdbc/insert! tx :test {:at timestamp})
+        (let [at (first-at-in-test tx)]
+          (is (= Timestamp (type at)))
+          (is (= timestamp at))))))
+
+  (testing "we can write a instance and retrieve an equivalen java.sql.timestamp "
+    (jdbc/with-db-transaction [tx (env-db-spec)]
+      (create-test-table tx)
+      (let [instant (java-time/instant)
+            timestamp (-> instant java-time/instant->sql-timestamp)]
+        (is (= (type instant) java.time.Instant))
+        (jdbc/insert! tx :test {:at instant})
         (let [at (first-at-in-test tx)]
           (is (= Timestamp (type at)))
           (is (= timestamp at))))))

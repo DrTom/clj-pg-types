@@ -4,6 +4,7 @@
     [clj-time.coerce :as time-coerce]
     [clj-time.core :as time-core]
     [clj-time.format :as time-format]
+    [java-time]
     ))
 
 (defmethod convert-parameter [:timestamp java.lang.String]
@@ -23,4 +24,13 @@
 (defmethod convert-parameter [:timestamptz org.joda.time.DateTime]
   [_ value _ _]
   (time-coerce/to-sql-time value))
+
+(defmethod convert-parameter [:timestamp java.time.Instant]
+  [_ value _ _]
+  (java-time/instant->sql-timestamp value))
+
+(defmethod convert-parameter [:timestampz java.time.Instant]
+  [_ value _ _]
+  (java-time/instant->sql-timestamp value))
+
 
