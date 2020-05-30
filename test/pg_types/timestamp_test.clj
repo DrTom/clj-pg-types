@@ -8,7 +8,6 @@
     [java-time])
   (:import [java.sql Timestamp]))
 
-
 (defn create-test-table [tx]
   (jdbc/db-do-commands
     tx "CREATE TEMP TABLE test (at timestamp WITH TIME ZONE )"))
@@ -53,7 +52,7 @@
           (is (= Timestamp (type at)))
           (is (= timestamp at))))))
 
-  (testing "we can still write joda retrieve java.sql.timestamp"
+  (testing "we can still write joda and retrieve java.sql.timestamp"
     (jdbc/with-db-transaction [tx (env-db-spec)]
       (jdbc/db-do-commands tx "CREATE TEMP TABLE test (at timestamp WITH TIME ZONE )")
       (let [joda-date-time (clj-time.core/now)

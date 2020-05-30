@@ -3,25 +3,33 @@
     [clojure.java.jdbc :as jdbc]
     [pg-types.sql-parameter.timestamp]
     [pg-types.connection :refer :all]
-    [java-time]
-    [clj-logging-config.log4j :as logging-config]
     [clojure.tools.logging :as logging]
+    [java-time]
+    [logbug.debug]
+    [taoensso.timbre.tools.logging]
     ))
 
-;(.setLevel (Logger/getLogger (str *ns*)) Level/ALL)
-;(logging/debug "works")
+(taoensso.timbre.tools.logging/use-timbre)
+(logbug.debug/debug-ns 'pg-types.sql-parameter.timestamp)
+(logbug.debug/debug-ns *ns*)
 
-;(jdbc/query (env-db-spec) ["SELECT ?::text[] AS tarray" "{'Foo','Bar','Baz'}"])
+(defn create-test-table [tx]
+  (jdbc/db-do-commands
+    tx "CREATE TEMP TABLE test (at timestamp WITH TIME ZONE )"))
 
-;(jdbc/query (env-db-spec) ["SELECT ?::integer[] AS tarray" "{1,2,3}"])
+(defn first-at-in-test [tx]
+  (->> "select * from test"
+       (jdbc/query tx) first :at))
+
+(defn run []
+  (jdbc/with-db-transaction [tx (env-db-spec)]
+    (create-test-table tx)
+    (let [instant (java-time/instant)
+          timestamp (-> instant java-time/instant->sql-timestamp)]
+      (logging/debug 'instant instant)
+      (logging/debug 'timestamp timestamp)
+      (jdbc/insert! tx :test {:at instant})
+      (let [at (first-at-in-test tx)]
+        (logging/debug 'at at)))))
 
 
-;(java.time.LocalTime/now)
-
-;(java.sql.Time/valueOf (local-time))
-
-;(java.util.Date/getTime)
-
-;(java.sql.Time/getTime)
-
-(logging-config/set-logger! :level :debug)
