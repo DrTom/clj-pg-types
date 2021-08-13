@@ -6,16 +6,12 @@ jobs:
         type: branch
         include_match: ^.*$
     context:
+      generate_tasks:
+        include_match: test/.*_test.clj
       task_defaults:
         traits:
           'Leiningen 2': true
-      tasks:
-        - name: run tests
-          scripts:
-            env:
-              body: |
-                set -euxo
-                env | sort
-            test:
-              body:
-                lein midje
+        scripts:
+          test:
+            body:
+              lein test $CIDER_CI_TASK_FILE

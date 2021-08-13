@@ -2,7 +2,6 @@
   (:require
     [clojure.java.jdbc :as jdbc]
     [pg-types.misc :as misc]
-
     [clojure.tools.logging :as logging]
     )
   (:import
@@ -23,7 +22,7 @@
 
 (defn dispatch-to-convert-parameter [val ^PreparedStatement stmt ^long ix]
   (let [type-name-kw (misc/statement-type-name-kw stmt ix)
-        _ (logging/debug "calling convert-parameter with: " [type-name-kw val stmt ix])
+        _ (logging/debug "calling convert-parameter with: " [type-name-kw val stmt ix] " type: " (type val))
         result (convert-parameter type-name-kw val stmt ix)]
     (logging/debug "converted-parameter: " result)
     result))

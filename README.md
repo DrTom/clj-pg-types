@@ -15,7 +15,7 @@ the type of the providing respectively receiving entity.
 
 ## Release and Dependency Information
 
-*  `pg-types "2.4.0"`
+*  `pg-types "3.0.0"`
 
 
 ## Java, Clojure, and  Postgresql Drivers Dependencies
@@ -25,37 +25,41 @@ Clojure version `1.10` but older versions should work too. The tested
 Postgresql driver version is `42.2.12`.
 
 
-## Timestamps and `clj-time` vs `clojure.java-time`
+## Breaking changes from version 2.x to 3.x
 
-Timestamps are converted to/from the Joda-Time library via the now deprecated
-[clj-time](https://github.com/clj-time/clj-time). The next major release will
-remove this behavior.
-
-If you don't want Joda-Time types with the `2.x` release simply do not require
-`pg-types.all` but only those conversions you desire. The following loads all
-available conversions **excluding** Joda-Time.
-
-```clojure
-(ns your-ns
-  (:require
-    [pg-types.read-column.array]
-    [pg-types.read-column.json]
-    [pg-types.read-column]
-    [pg-types.sql-parameter.array]
-    [pg-types.sql-parameter.json]
-    [pg-types.sql-parameter.uuid]
-    [pg-types.sql-parameter]))
-```
-
-The type of a timestamp will then be `java.sql.Timestamp` which can be
-converted to to more accessible types for example via
-[Clojure.Java-Time](https://github.com/dm3/clojure.java-time):
-
+Timestamps are not automatically converted to `org.joda.time.DateTime` types.
+The value of a timestamp is now of type `java.sql.Timestamp`. The latter can be
+cumbersome to handle but is easily converted to more accessible types for
+example via [Clojure.Java-Time](https://github.com/dm3/clojure.java-time):
 
 ```clojure
 (java-time/local-date my-timestamp)
 (java-time/local-time my-timestamp)
 ```
+
+
+
+### Adjusting Legacy Code to Work with Version 3.x
+
+Automatic conversion of timestamps via `clj-time` is still available by opting
+in:
+
+```
+(ns my-ns
+  (require
+    pg-types.all
+    pg-types.read-column.timestamp.clj-time
+    ))
+```
+As [clj-time](https://github.com/clj-time/clj-time) has been deprecated and we
+do not recommend to do this for new code.
+
+Even for legacy code consider to convert isolated values manually when needed
+for example with `(clj-time.coerce/from-sql-time my-timestap)`.
+
+Note also that submitting `org.joda.time.DateTime` types directly is still
+enabled by default.
+
 
 
 ## Usage

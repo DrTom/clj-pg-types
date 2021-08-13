@@ -1,14 +1,12 @@
 (ns pg-types.enum-test
   (:require
-    [pg-types.sql-parameter :refer :all]
-    [pg-types.read-column :refer :all]
-
-    [midje.sweet :refer :all]
-    [pg-types.connection :refer :all]
     [pg-types.all :refer :all]
+    [pg-types.connection :refer :all]
+    [pg-types.read-column :refer :all]
+    [pg-types.sql-parameter :refer :all]
+
     [clojure.java.jdbc :as jdbc]
-    [clj-time.core :as time-core]
-    [clojure.tools.logging :as logging]
+    [clojure.test :refer :all]
     )
   (:import
     [org.postgresql.util PGobject]
@@ -32,18 +30,19 @@
     (.setType (kw->str type-name-kw))
     (.setValue (kw->str value))))
 
-(facts "inserting a custom enum mood type as a keyword and retuning it as a keyword"
-       (jdbc/with-db-transaction [tx (env-db-spec)]
-         (jdbc/db-set-rollback-only! tx)
-         (jdbc/db-do-commands tx "DROP TYPE IF EXISTS mood;")
-         (jdbc/db-do-commands tx "CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');")
-         (jdbc/db-do-commands tx "CREATE TEMP TABLE person (name text, current_mood mood);")
-         (jdbc/insert! tx :person {:name "Moe" :current_mood :happy} )
-         (let [row (->> ["SELECT * FROM person"]
-                        (jdbc/query tx )
-                        first)]
-           (fact "returns the proper current mood" (:current_mood row) => :happy)
-           )))
+(deftest enum-kw
+  (testing "inserting a custom enum mood type as a keyword and retuning it as a keyword"
+    (jdbc/with-db-transaction [tx (env-db-spec)]
+      (jdbc/db-set-rollback-only! tx)
+      (jdbc/db-do-commands tx "DROP TYPE IF EXISTS mood;")
+      (jdbc/db-do-commands tx "CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');")
+      (jdbc/db-do-commands tx "CREATE TEMP TABLE person (name text, current_mood mood);")
+      (jdbc/insert! tx :person {:name "Moe" :current_mood :happy} )
+      (let [row (->> ["SELECT * FROM person"]
+                     (jdbc/query tx )
+                     first)]
+        (testing "returns the proper current mood"
+          (is (= (:current_mood row) :happy)))))))
 
 
 ; This will let you write strings, too.
@@ -53,17 +52,18 @@
     (.setType (kw->str type-name-kw))
     (.setValue value)))
 
-(facts "inserting a custom enum mood type as a string and retuning it as a keyword"
-       (jdbc/with-db-transaction [tx (env-db-spec)]
-         (jdbc/db-set-rollback-only! tx)
-         (jdbc/db-do-commands tx "DROP TYPE IF EXISTS mood;")
-         (jdbc/db-do-commands tx "CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');")
-         (jdbc/db-do-commands tx "CREATE TEMP TABLE person (name text, current_mood mood);")
-         (jdbc/insert! tx :person {:name "Moe" :current_mood "happy"} )
-         (let [row (->> ["SELECT * FROM person"]
-                        (jdbc/query tx )
-                        first)]
-           (fact "returns the proper current mood" (:current_mood row) => :happy)
-           )))
+(deftest enum-string
+  (testing "inserting a custom enum mood type as a string and retuning it as a keyword"
+    (jdbc/with-db-transaction [tx (env-db-spec)]
+      (jdbc/db-set-rollback-only! tx)
+      (jdbc/db-do-commands tx "DROP TYPE IF EXISTS mood;")
+      (jdbc/db-do-commands tx "CREATE TYPE mood AS ENUM ('sad', 'ok', 'happy');")
+      (jdbc/db-do-commands tx "CREATE TEMP TABLE person (name text, current_mood mood);")
+      (jdbc/insert! tx :person {:name "Moe" :current_mood "happy"} )
+      (let [row (->> ["SELECT * FROM person"]
+                     (jdbc/query tx )
+                     first)]
+        (testing "returns the proper current mood"
+          (is (= (:current_mood row) :happy)))))))
 
 
